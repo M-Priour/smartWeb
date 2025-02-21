@@ -46,9 +46,9 @@
 <script language="JavaScript">
 messagingHandle ="testmp";
 pop = null;
-targetOrigin = "http://localhost:8000/page/doctolib.html";
+targetOrigin = "https://cherry-1740141924130.staticrun.app/smartweb/page/doctolib.html";
 $('#openDoctolib').click(function(){
-    pop = window.open("http://localhost:8000/page/doctolib.html", "docto");
+    pop = window.open("https://cherry-1740141924130.staticrun.app/smartweb/page/doctolib.html", "docto");
 
     const ehrWindow = window.parent !== window.self ? window.parent : window.opener;
 
@@ -57,7 +57,7 @@ $('#openDoctolib').click(function(){
       messagingHandle
     );
     console.log(ehrWindow);
-    const client = new Client(messagingHandle, "http://localhost:8000");
+    const client = new Client(messagingHandle, "https://cherry-1740141924130.staticrun.app");
     client.enable({
       receiveMessage: (message) => {
         console.log(message);
