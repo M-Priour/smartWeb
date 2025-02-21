@@ -1,0 +1,92 @@
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Demo SWM App</title>
+
+<body cz-shortcut-listen="true">
+  <div id="root">
+    <div class="App">
+      <header class="App-header">
+        <button class="config-button" id="sendMessage">Send Message</button>
+      </header>
+      <main class="App-main">
+        Type de message : <input type="text" id="messageType"/>
+
+        <div class="message-panel">
+          <div class="to-send">
+      Contenu <textarea class="App-message" spellcheck="false" id="messageToSend">{
+        "messageType": "ui.launchActivity",
+        "messagingHandle": "testmp",
+        "messageId": "2",
+        "payload": {
+          "activityType": "problem-review",
+          "activityParameters": {
+            "problemLocation": "Condition/123"
+          }
+        }
+      }</textarea><span class="send-controls"><label disabled=""></span>
+          </div>
+          <div class="from-ehr">
+            <p><b><i>Read-only </i></b>EHR response:</p><textarea disabled="" class="App-message" readonly=""
+              spellcheck="false" id="messageResponse"></textarea><button class="copy-response">Copy to
+              clipboard</button>
+          </div>
+        </div>
+      </main>
+
+    </div>
+  </div>
+  <noscript>Enable JavaScript to run this app.</noscript>
+
+  <script src="../js/swm.js"></script>
+  <script src="../js/jquery-3.7.1.js"></script>
+<script language="JavaScript">
+messagingHandle ="testmp";
+targetOrigin = "http://localhost:8000";
+
+const ehrWindow = window.parent !== window.self ? window.parent : window.opener;
+console.log(ehrWindow);
+const client = new Client(messagingHandle, targetOrigin);
+client.enable({
+  // Note: it's uncommon for an App to receive a message - typically only responses are expected.
+  receiveMessage: console.warn,
+
+  receiveResponse: (r) => {
+    $('#messageResponse').val(JSON.stringify(r, null, 2));
+
+    if (r.status === '200 OK') {
+      console.log('GREAT!');
+    } else {
+      console.log('Uh Oh!', r)
+    }
+  },
+
+  receiveError: console.error,
+});
+  
+$('#sendMessage').click(function(){
+  
+  /*const launchProblemReview = client.createMessage('ui.launchActivity', {
+    activityType: "problem-review",
+    activityParameters: {
+      problemLocation: "Condition/123"
+    }
+  });*/
+
+
+//client.sendMessage (launchProblemReview);
+//window.opener.postMessage($('#messageToSend').val(),targetOrigin);
+
+const launchProblemReview = client.createMessage($('#messageType').val(), $('#messageToSend').val());
+
+
+client.sendMessage (launchProblemReview);
+  
+});
+
+</script>
+
+</body>
+
+</html>
